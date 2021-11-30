@@ -30,22 +30,21 @@ void main() {
   //   3. Reflect : https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/reflect.xhtml
   //   3. Clamp   : https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/clamp.xhtml
   //   3. Mix     : https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/mix.xhtml
-  float ratio = 1.00 / 1.52;
   vec3 I = normalize(fs_in.position - fs_in.viewPosition);
   vec3 N = normalize(fs_in.normal);
   vec3 reflection = reflect(I, N);
   vec3 reflectColor = texture(skybox, reflection).rgb;
 
-  vec3 refractionX = refract(I, N, Eta[0]);
-  vec3 refractionY = refract(I, N, Eta[1]);
-  vec3 refractionZ = refract(I, N, Eta[2]);
-  vec3 refraction = vec3(refractionX[0], refractionY[1], refractionZ[2]);
-  vec3 refractColor = texture(skybox, refraction).rgb;
+  vec3 red = refract(I, N, Eta.x);
+  vec3 green = refract(I, N, Eta.y);
+  vec3 blue = refract(I, N, Eta.z);
+  vec3 refractColor;
+  refractColor.r = texture(skybox, red).r;
+  refractColor.g = texture(skybox, green).g;
+  refractColor.b = texture(skybox, blue).b;
 
   float reflectCoefficient = max(0, min(1, fresnelBias + fresnelScale * (pow(1 + dot(I, N), fresnelPower))));
 
-  // vec3 R = refract(I, normalize(fs_in.normal), ratio);
   // FragColor = vec4(0.5, 0.5, 0.5, 1.0);
   FragColor = vec4(reflectCoefficient * reflectColor + (1 - reflectCoefficient) * refractColor, 1.0);
-  // FragColor = vec4(refractColor, 1.0);
 }
