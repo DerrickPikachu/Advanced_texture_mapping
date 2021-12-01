@@ -15,7 +15,6 @@ void main() {
   // Note:
   //   1. Height at (x, y) = H(x, y) = sin(offset - 0.1 * y)
   //   2. A simple tranform from [-1, 1] to [0, 1] is f(x) = x * 0.5 + 0.5
-  // normal = vec4(0.5, 0.5, sin(offset - 0.1 * gl_FragCoord.y), 1.0);
   height = sin(offset - 0.1 * gl_FragCoord.y);
 
   vec3 point1 = vec3(gl_FragCoord.x - delta, gl_FragCoord.y, sin(offset - 0.1 * gl_FragCoord.y));

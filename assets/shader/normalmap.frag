@@ -45,6 +45,27 @@ void main() {
   //   2. Convert the value from RGB [0, 1] to normal [-1, 1], this will be inverse of what you do in calculatenormal.frag's output.
   //   3. Remember to NORMALIZE it again.
   //   4. Use Blinn-Phong shading here with parameters ks = kd = 0.75
-  float lighting = ambient + diffuse + specular;
+  vec3 normal = texture(normalTexture, textureCoordinate).rgb;
+  normal = normalize(normal * 2.0 - 1.0);
+
+  float attenuation = 1;
+  float shininess = 8;
+  float ks = 0.75;
+  float kd = 0.75;
+
+  vec3 L = normalize(-fs_in.lightDirection);  
+  vec3 light = vec3(1.0, 1.0, 1.0);
+  vec3 V = normalize(fs_in.viewPosition - fs_in.position);
+  vec3 H = normalize(V + L);
+
+  vec3 ambientLight = light * ambient;
+  vec3 diffuseLight = light * kd * max(dot(L, normal), 0.0) * attenuation;
+  vec3 specularLight = light * ks * pow(max(2 * pow(dot(H, normal), 2) - 1, 0.0), 8) * attenuation;
+
+  vec3 lighting = ambientLight + diffuseLight + specularLight;
+  if (dot(L, normal) < 0) {
+    lighting = ambientLight;
+  }
+  
   FragColor = vec4(lighting * diffuseColor, 1.0);
 }

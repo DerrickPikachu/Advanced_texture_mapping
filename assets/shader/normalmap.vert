@@ -39,6 +39,14 @@ void main() {
   //   1. Calculate the inverse of tangent space transform matrix (TBN matrix)
   //   2. Transform light direction, viewPosition, and position to the tangent space.
   //   3. (Bonus-Displacement) Query height from heightTexture.
+  vec3 T = normalize(vec3(modelMatrix * vec4(tangent_in, 0.0)));
+  vec3 B = normalize(vec3(modelMatrix * vec4(bitangent_in, 0.0)));
+  vec3 N = normalize(vec3(modelMatrix * vec4(normal_in, 0.0)));
+  mat3 inverse_TBN = transpose(mat3(T, B, N));
+
+  vs_out.lightDirection = inverse_TBN * lightDirection;
+  vs_out.viewPosition = inverse_TBN * vec3(viewPosition);
+  vs_out.position = inverse_TBN * vec3(modelMatrix * vec4(position_in, 1.0));
 
   vec3 displacementVector = vec3(0);
   if (useDisplacementMapping) {
