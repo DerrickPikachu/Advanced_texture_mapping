@@ -60,7 +60,7 @@ void main() {
 
   vec3 ambientLight = light * ambient;
   vec3 diffuseLight = light * kd * max(dot(L, normal), 0.0) * attenuation;
-  vec3 specularLight = light * ks * pow(max(2 * pow(dot(H, normal), 2) - 1, 0.0), 8) * attenuation;
+  vec3 specularLight = light * ks * pow(max(dot(H, normal), 0.0), 8) * attenuation;
 
   vec3 lighting = ambientLight + diffuseLight + specularLight;
   if (dot(L, normal) < 0) {
