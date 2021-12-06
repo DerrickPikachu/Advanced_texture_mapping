@@ -63,9 +63,6 @@ void main() {
   vec3 specularLight = light * ks * pow(max(dot(H, normal), 0.0), 8) * attenuation;
 
   vec3 lighting = ambientLight + diffuseLight + specularLight;
-  if (dot(L, normal) < 0) {
-    lighting = ambientLight;
-  }
   
   FragColor = vec4(lighting * diffuseColor, 1.0);
 }
